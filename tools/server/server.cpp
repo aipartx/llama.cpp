@@ -4519,6 +4519,17 @@ int main(int argc, char ** argv) {
 
             llama_tokens tokens = tokenize_mixed(ctx_server.vocab, body.at("content"), add_special, true);
 
+            if (body.count("count_only") != 0 && body.at("count_only").get<bool>()) {
+                // return only the number of tokens
+                const json data = {
+                    {"count", (int)tokens.size()}
+                };
+                res_ok(res, data);
+                return;
+                
+            } 
+
+
             if (with_pieces) {
                 for (const auto& token : tokens) {
                     std::string piece = common_token_to_piece(ctx_server.ctx, token);
